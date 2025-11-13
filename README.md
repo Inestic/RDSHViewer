@@ -1,8 +1,8 @@
 # RDSHViewer
 
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Inestic/rdshviewer/total?style=flat-square&label=download%20(since%20November%202025))
-![GitHub Repo stars](https://img.shields.io/github/stars/Inestic/rdshviewer?style=flat-square)
-![GitHub Release](https://img.shields.io/github/v/release/Inestic/rdshviewer?style=flat-square)
+<a href="https://github.com/Inestic/RDSHViewer/releases/latest"><img src="https://img.shields.io/github/downloads/Inestic/RDSHViewer/total?style=flat-square&label=download%20since%20November%202025&color=blue"></a>
+<a href="https://github.com/Inestic/RDSHViewer/releases/latest"><img src="https://img.shields.io/github/v/release/Inestic/RDSHViewer?style=flat-square"></a>
+<a href="https://github.com/Inestic/RDSHViewer/stargazers"><img src="https://img.shields.io/github/stars/Inestic/RDSHViewer?style=flat-square"></a>
 
 RDSH Viewer made easy for managing RDS users sessions and connection to RDP sessions.
 Made for whose, who manages RDSH farms, connects to user on daily basis and doesn't want to remember `quser`, `qwinsta`, and `mstsc` commands arguments.
