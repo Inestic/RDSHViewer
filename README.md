@@ -1,4 +1,4 @@
-# RDSHViewer
+# RDSH Viewer
 
 <a href="https://github.com/Inestic/RDSHViewer/releases/latest"><img src="https://img.shields.io/github/downloads/Inestic/RDSHViewer/total?style=flat-square&label=download%20since%20November%202025&color=blue"></a>
 <a href="https://github.com/Inestic/RDSHViewer/releases/latest"><img src="https://img.shields.io/github/v/release/Inestic/RDSHViewer?style=flat-square"></a>
