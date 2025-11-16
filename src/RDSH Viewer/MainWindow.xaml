@@ -1,0 +1,366 @@
+﻿<mah:MetroWindow x:Class="RDSH_Viewer.MainWindow"
+                 x:Name="MetroWindow"
+                 d:DataContext="{d:DesignInstance Type=vm:ViewModel}"
+                 mc:Ignorable="d"
+                 xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:converter="clr-namespace:RDSH_Viewer.Converters"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:local="clr-namespace:RDSH_Viewer"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:system="clr-namespace:System;assembly=mscorlib"
+                 xmlns:vm="clr-namespace:RDSH_Viewer.VM"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 FontSize="18"
+                 MinHeight="530"
+                 MinWidth="1070"
+                 ShowIconOnTitleBar="True"
+                 ShowTitleBar="True"
+                 SnapsToDevicePixels="True"
+                 TextOptions.TextFormattingMode="Display"
+                 FontFamily="Cambria"
+                 Title="RDSH VIEWER"
+                 WindowStartupLocation="CenterScreen"
+                 SizeToContent="WidthAndHeight"
+                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                 Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                 Closing="MetroWindow_Closing">
+    <mah:MetroWindow.Resources>
+        <converter:LengthToBool x:Key="LengthToBoolConverter"/>
+        <converter:IndexToBool x:Key="IndexToBoolConverter"/>
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="Styles.TextBlock.StatusBar.Base">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="Styles.TextBlock.StatusBar.Text" BasedOn="{StaticResource Styles.TextBlock.StatusBar.Base}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="10, 0, 0, 0" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="Styles.TextBlock.StatusBar.Hyperlink" BasedOn="{StaticResource Styles.TextBlock.StatusBar.Base}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0, 0, 10, 0" />
+            <Setter Property="Text" Value="https://github.com/Inestic"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                    <Setter Property="ForceCursor" Value="True"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="Styles.TextBlock.Table.Cell">
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Foreground}"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5, 3, 5, 3"/>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="Styles.TextBlock.Table.CellPlaceholder" BasedOn="{StaticResource Styles.TextBlock.Table.Cell}">
+            <Setter Property="Text" Value="{DynamicResource Window.Session.NotAvailable}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+    </mah:MetroWindow.Resources>
+    <behaviors:Interaction.Triggers>
+        <behaviors:DataTrigger Binding="{Binding ShowLoadingPanel}" Value="True">
+            <behaviors:ChangePropertyAction TargetName="ListView_Sessions" PropertyName="Visibility" Value="Collapsed"/>
+            <behaviors:ChangePropertyAction TargetName="StackPanel_Loading" PropertyName="Visibility" Value="Visible"/>
+            <behaviors:ChangePropertyAction TargetName="ProgressRing_Loading" PropertyName="IsActive" Value="True"/>
+        </behaviors:DataTrigger>
+        <behaviors:DataTrigger Binding="{Binding ShowLoadingPanel}" Value="False">
+            <behaviors:ChangePropertyAction TargetName="ListView_Sessions" PropertyName="Visibility" Value="Visible"/>
+            <behaviors:ChangePropertyAction TargetName="StackPanel_Loading" PropertyName="Visibility" Value="Collapsed"/>
+            <behaviors:ChangePropertyAction TargetName="ProgressRing_Loading" PropertyName="IsActive" Value="False"/>
+        </behaviors:DataTrigger>
+        <behaviors:DataTrigger Binding="{Binding RdpServers.Count,  Converter={StaticResource LengthToBoolConverter}}" Value="False">
+            <behaviors:ChangePropertyAction TargetName="ListBox_RdpServer" PropertyName="BorderBrush" Value="#BEBEBE"/>
+            <behaviors:ChangePropertyAction TargetName="StackPanel_AddRdpServer" PropertyName="Visibility" Value="Visible"/>
+        </behaviors:DataTrigger>
+        <behaviors:DataTrigger Binding="{Binding RdpServers.Count, Converter={StaticResource LengthToBoolConverter}}" Value="True">
+            <behaviors:ChangePropertyAction TargetName="ListBox_RdpServer" PropertyName="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+            <behaviors:ChangePropertyAction TargetName="StackPanel_AddRdpServer" PropertyName="Visibility" Value="Collapsed"/>
+        </behaviors:DataTrigger>
+    </behaviors:Interaction.Triggers>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button ToolTip="{DynamicResource Window.View.Sessions}"
+                    Command="{Binding Command_GetSessionsClicked}"
+                    IsEnabled="{Binding RdpServers.Count, Mode=OneWay, Converter={StaticResource LengthToBoolConverter}}">
+                <iconPacks:FontAwesome Height="22"
+                                       Width="22"
+                                       Kind="UsersSolid"/>
+            </Button>
+            <Button ToolTip="{DynamicResource Window.Settings}"
+                    Command="{Binding Command_SettingsClicked}">
+                <iconPacks:FontAwesome Height="22"
+                                       Width="22"
+                                       Kind="GearsSolid"/>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="ListView_Sessions"
+                  Grid.Row="0"
+                  ItemsSource="{Binding RdpSessions}"
+                  SelectedIndex="{Binding SessionIndex}"
+                  SelectionMode="Single"
+                  HorizontalContentAlignment="Stretch"
+                  VerticalContentAlignment="Center"
+                  ContextMenuOpening="ListView_Sessions_ContextMenuOpening"
+                  Margin="-3, 0, 0, 0">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{DynamicResource Window.ContexMenu.Copy}"
+                              Command="{Binding Command_ContextMenuCopyClicked}">
+                        <MenuItem.Icon>
+                            <iconPacks:FontAwesome Kind="CopyRegular"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItem_ConnectAndControl"
+                              Header="{DynamicResource Window.ContexMenu.Connect.Control}"
+                              Command="{Binding Command_ContextMenuConnectClicked}"
+                              IsEnabled="{Binding SessionActive}">
+                        <MenuItem.CommandParameter>
+                            <system:Boolean>False</system:Boolean>
+                        </MenuItem.CommandParameter>
+                        <MenuItem.Icon>
+                            <iconPacks:FontAwesome Kind="UserRegular"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItem_ConnectViewOnly"
+                              Header="{DynamicResource Window.ContexMenu.Connect.ViewOnly}"
+                              Command="{Binding Command_ContextMenuConnectClicked}"
+                              IsEnabled="{Binding SessionActive}">
+                        <MenuItem.CommandParameter>
+                            <system:Boolean>True</system:Boolean>
+                        </MenuItem.CommandParameter>
+                        <MenuItem.Icon>
+                            <iconPacks:FontAwesome Kind="EyeRegular"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="Padding" Value="5" />
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="RDS HOST">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding RDSHost}"
+                                           Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="SESSION ID">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SessionId}"
+                                           Style="{DynamicResource Styles.TextBlock.Table.Cell}"
+                                           HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="USER DISPLAY NAME">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock x:Name="TextBlock_UserDisplayName"
+                                               Text="{Binding UserDisplayName}"
+                                               Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                                    <TextBlock x:Name="TextBlock_PlaceholderUserDisplayName"
+                                               Style="{DynamicResource Styles.TextBlock.Table.CellPlaceholder}"/>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TextBlock_UserDisplayName, Path=Text}" Value="{x:Static system:String.Empty}">
+                                        <Setter TargetName="TextBlock_UserDisplayName" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="TextBlock_PlaceholderUserDisplayName" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="USER LOGON NAME">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding UserLogonName}"
+                                           Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="SESSION STATE">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SessionState}"
+                                           Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="PC NAME">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock x:Name="TextBlock_PcName"
+                                               Text="{Binding Workstation}"
+                                               Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                                    <TextBlock x:Name="TextBlock_PlaceholderPcName"
+                                               Style="{DynamicResource Styles.TextBlock.Table.CellPlaceholder}"/>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TextBlock_PcName, Path=Text}" Value="{x:Static system:String.Empty}">
+                                        <Setter TargetName="TextBlock_PcName" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="TextBlock_PlaceholderPcName" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="PC ADDRESS">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock x:Name="TextBlock_PcAddress"
+                                               Text="{Binding IpAddress}"
+                                               Style="{DynamicResource Styles.TextBlock.Table.Cell}"/>
+                                    <TextBlock x:Name="TextBlock_PlaceholderPcAddress"
+                                               Style="{DynamicResource Styles.TextBlock.Table.CellPlaceholder}"/>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TextBlock_PcAddress, Path=Text}" Value="{x:Static system:String.Empty}">
+                                        <Setter TargetName="TextBlock_PcAddress" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="TextBlock_PlaceholderPcAddress" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel x:Name="StackPanel_Loading"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <mah:ProgressRing x:Name="ProgressRing_Loading"
+                              Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+        </StackPanel>
+        <mah:FlyoutsControl Grid.Row="0">
+                <mah:Flyout Header="{DynamicResource Window.Settings}"
+                            Position="Right"
+                            Theme="Adapt"
+                            IsOpen="{Binding OpenSettingsFlyout, Mode=OneWay}"
+                            Width="425"
+                            CloseCommand="{Binding Command_SettingsClicked}">
+                <TabControl Style="{DynamicResource MahApps.Styles.TabControl.Animated}">
+                    <TabItem Header="{DynamicResource Window.Settings.Rdshs}">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0"
+                                        BorderThickness="1"
+                                        Padding="1"
+                                        BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
+                                    <TextBox x:Name="TextBox_AddRdsh"
+                                             BorderThickness="0"
+                                             FontSize="{Binding ElementName=MetroWindow, Path=FontSize}"
+                                             FontFamily="{Binding ElementName=MetroWindow, Path=FontFamily}"/>
+                                </Border>
+                                <Button Grid.Column="1"
+                                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                        IsEnabled="{Binding ElementName=TextBox_AddRdsh, Path=Text.Length, Converter={StaticResource LengthToBoolConverter}}"
+                                        Command="{Binding Command_AddServerClicked}"
+                                        CommandParameter="{Binding ElementName=TextBox_AddRdsh}"
+                                        IsDefault="True"
+                                        Margin="10, 0, 10, 0"
+                                        Width="36"
+                                        Height="36">
+                                    <iconPacks:FontAwesome Kind="PlusSolid"/>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Row="1"
+                                  Margin="0, 20, 0, 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <ListBox x:Name="ListBox_RdpServer"
+                                             Grid.Row="0"
+                                             ItemsSource="{Binding RdpServers}"
+                                             Height="274"/>
+                                </Grid>
+                                <Button Grid.Column="1"
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Right"
+                                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                        IsEnabled="{Binding ElementName=ListBox_RdpServer, Path=SelectedIndex, Converter={StaticResource IndexToBoolConverter}}"
+                                        Command="{Binding Command_RemoveServerClicked}"
+                                        CommandParameter="{Binding ElementName=ListBox_RdpServer, Path=SelectedIndex}"
+                                        Margin="10, 0, 10, 0"
+                                        Width="36"
+                                        Height="36">
+                                    <iconPacks:FontAwesome Kind="MinusSolid"/>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="{DynamicResource Window.Settings.Themes}">
+                        <ListBox Grid.Column="0"
+                                 ItemsSource="{Binding Themes}"
+                                 SelectedIndex="{Binding ThemeIndex}"
+                                 Height="330"
+                                 Margin="5"/>
+                    </TabItem>
+                </TabControl>
+                </mah:Flyout>
+            </mah:FlyoutsControl>
+        <Grid Grid.Row="1"
+              Background="{DynamicResource MahApps.Brushes.Accent}">
+            <TextBlock Style="{DynamicResource Styles.TextBlock.StatusBar.Text}">
+                <Run Text="{DynamicResource Window.StatusBar.TotalSessions}"/>
+                <Run Text="{Binding RdpSessions.Count, Mode=OneWay}"/>
+            </TextBlock>
+            <TextBlock Style="{DynamicResource Styles.TextBlock.StatusBar.Hyperlink}">
+                <TextBlock.InputBindings>
+                    <MouseBinding Command="{Binding Command_HyperlinkClicked}"
+                                  CommandParameter="https://github.com/Inestic"
+                                  MouseAction="LeftClick" />
+                </TextBlock.InputBindings>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>

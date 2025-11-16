@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <s:String x:Key="Window.ContexMenu.Connect.Control">Connect and control</s:String>
+    <s:String x:Key="Window.ContexMenu.Connect.ViewOnly">Connect as view only</s:String>
+    <s:String x:Key="Window.ContexMenu.Copy">Copy</s:String>
+    <s:String x:Key="Window.Session.NotAvailable">N/A</s:String>
+    <s:String x:Key="Window.Settings">Settings</s:String>
+    <s:String x:Key="Window.Settings.Rdshs">RDS Hosts</s:String>
+    <s:String x:Key="Window.Settings.Themes">Themes</s:String>
+    <s:String x:Key="Window.StatusBar.TotalSessions">Total sessions: </s:String>
+    <s:String x:Key="Window.View.Sessions">View sessions</s:String>
+</ResourceDictionary>
